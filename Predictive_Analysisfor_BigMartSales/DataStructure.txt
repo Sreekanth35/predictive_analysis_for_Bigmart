@@ -1,0 +1,30 @@
+Predictive Analysis for Big Mart Sales Using Machine Learning Algorithms
+
+
+Linear Regression, Ridge Regression, Mart Sale Prediction, Machine Learning
+
+
+Predictive_Analysisfor_BigMartSales
+
+predictive_analysisfor_bigmartSales
+
+
+
+
+Bigmart_model
+
+Item_Identifier
+Outlet_Identifier
+Item_Outlet_Sales
+
+
+detection_values_model
+
+model_name
+MAE
+MSE
+RMSE
+
+
+
+Bigmart_model,detection_values_model

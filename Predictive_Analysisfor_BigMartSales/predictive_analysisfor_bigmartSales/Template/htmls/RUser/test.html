@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country and State Dropdown</title>
+</head>
+<body>
+    <select id="country"></select>
+    <select id="state"></select>
+
+    <script>
+        // Function to populate dropdown with options
+        function populateDropdown(dropdown, options, inputWidth) {
+            console.log(options); // Debug statement
+            dropdown.innerHTML = '<option value="">Select</option>';
+            options.forEach(function (option) {
+                var optionElement = document.createElement('option');
+                optionElement.textContent = option.name;
+                optionElement.value = option.value; // Adjust this based on your data structure
+                optionElement.style.width = inputWidth; // Set the width of the option element
+                dropdown.appendChild(optionElement);
+            });
+        }
+
+        // Fetch countries data with API key
+        fetch('https://api.countrystatecity.in/v1/countries', {
+            headers: {
+                'X-CSCAPI-KEY': 'TnRvZ290SXJjN0Y4U2doR2w0QktLTGdMc1ZsOGZoUndyNGRRaGJEYw=='
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch countries: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // Debug statement
+            const inputWidth = '260px'; // Adjust this width according to your needs
+            populateDropdown(document.getElementById('country'), data, inputWidth);
+
+            // Event listener for country selection
+            document.getElementById('country').addEventListener('change', function () {
+                const selectedCountry = this.options.value;
+                console.log('Selected Country:', selectedCountry); // Debug statement
+                if (selectedCountry) {
+                    const country = data.find(country => country.name === selectedCountry);
+                    console.log('Selected Country Object:', country); // Debug statement
+                    if (country) {
+                        const iso2coun = country.iso2;
+
+                        // Fetch states data for the selected country
+                        fetch(`https://api.countrystatecity.in/v1/countries/${iso2coun}/states`, {
+                                headers: {
+                                    'X-CSCAPI-KEY': 'TnRvZ290SXJjN0Y4U2doR2w0QktLTGdMc1ZsOGZoUndyNGRRaGJEYw=='
+                                }
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to fetch states: ' + response.status);
+                                }
+                                return response.json();
+                            })
+                            .then(statesData => {
+                                console.log(statesData); // Debug statement
+                                const inputWidth = '100px'; // Adjust this width according to your needs
+                                populateDropdown(document.getElementById('state'), statesData, inputWidth);
+                            })
+                            .catch(error => console.error('Error fetching states:', error));
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching countries:', error));
+    </script>
+</body>
+</html>
